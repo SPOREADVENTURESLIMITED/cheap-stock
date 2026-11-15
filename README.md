@@ -15,15 +15,15 @@ Supabase has been removed from application dependencies and runtime access.
 ## Provisioning and deployment
 Wrangler declares D1, KV and R2 resources. Cloudflare supports automatic provisioning of these resources from Wrangler configuration during deployment. GitHub Actions deploys the Worker and applies D1 migrations.
 
-Required GitHub Actions secrets:
-- `CLOUDFLARE_API_TOKEN` — Workers Scripts Edit, D1 Edit, Workers KV Storage Edit and R2 Storage Edit.
-- `CLOUDFLARE_ACCOUNT_ID` — Cloudflare account ID.
-- `CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN` — long random one-time token for creating the first admin.
-- `CHEAP_STOCK_ADMIN_RECOVERY_KEY` — long random owner recovery key for resetting the admin password.
-- `PESAPAL_CONSUMER_KEY` and `PESAPAL_CONSUMER_SECRET` — merchant API credentials from Pesapal.
-- `PESAPAL_ENV` — set to `sandbox` for testing or `live` for production.
+Required GitHub Actions secrets are only `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. The token needs Workers Scripts Edit, D1 Edit, Workers KV Storage Edit and R2 Storage Edit permissions. The deployment workflow provisions/reuses D1 and KV, creates the R2 bucket if missing, deploys the Worker and applies D1 migrations.
 
-The workflow transfers bootstrap and recovery values to Worker secrets. Never commit secrets or paste them into chat. After first admin setup, remove or rotate the bootstrap token in Cloudflare.
+Set application secrets directly in Cloudflare Dashboard → Workers & Pages → `cheap-stock` → Settings → Variables and Secrets → Add secret:
+- `ADMIN_BOOTSTRAP_TOKEN` — long random one-time token for first administrator setup.
+- `ADMIN_RECOVERY_KEY` — long random owner recovery key.
+- `PESAPAL_CONSUMER_KEY` and `PESAPAL_CONSUMER_SECRET` — merchant API credentials from Pesapal.
+- `PESAPAL_ENV` — `sandbox` for testing or `live` for production.
+
+Never commit secrets or paste them into chat. After first admin setup, remove or rotate `ADMIN_BOOTSTRAP_TOKEN` in Cloudflare.
 
 ## First administrator
 1. Deploy the Worker and wait for D1 migration to finish.
