@@ -7,7 +7,7 @@ const photos={
  juice:{src:'https://images.unsplash.com/photo-1771904866954-9416ec52fce2?auto=format&fit=crop&w=900&q=82',credit:'Brooke Balentine',url:'https://unsplash.com/photos/hand-holding-a-bottle-of-fresh-orange-juice-oxSh6Ac0dmg'},
  water:{src:'https://images.unsplash.com/photo-1700506844206-ec2f9e2a65cd?auto=format&fit=crop&w=900&q=82',credit:'Marek Mucha',url:'https://unsplash.com/photos/a-close-up-of-a-water-bottle-on-a-table-svMGVSupipQ'},
  wine:{src:'https://images.unsplash.com/photo-1546944517-4f38480ff03c?auto=format&fit=crop&w=900&q=82',credit:'Brett Jordan',url:'https://unsplash.com/photos/wine-bottle-ICjJFNki2RY'},
- mixer:{src:'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=900&q=82',credit:'Steve A Johnson',url:'https://unsplash.com/photos/clear-drinking-bottle-filled-with-water-N-MqWXXZvNY'}
+ mixer:{src:'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=900&q=82',credit:'Steve A Johnson',url:'https://unsplash.com/photos/clear-drinking-bottle-filled-with-water-N-MqWXXZvNY'},\n energy:{src:'https://images.unsplash.com/photo-1670172072742-d87fdc876ff8?auto=format&fit=crop&w=900&q=82',credit:'Jens De Decker',url:'https://unsplash.com/photos/a-can-of-energy-drink-yhdIyJDrp1o'}
 };
 const starterItems=[
  {name:'Beer & lagers',category:'Beer, Wine & Spirits',description:'Bottled and canned beer selections for retail, gatherings and bulk enquiries.',photo:photos.beer,alcohol:true},
@@ -15,7 +15,7 @@ const starterItems=[
  {name:'Fruit juices',category:'Juices & Mixers',description:'Fruit juice and juice drink options in assorted flavours and pack sizes.',photo:photos.juice},
  {name:'Bottled water',category:'Water',description:'Still drinking water for homes, offices, shops and events.',photo:photos.water},
  {name:'Wine',category:'Beer, Wine & Spirits',description:'Red and white wine selections. Ask about available bottles and sizes.',photo:photos.wine,alcohol:true},
- {name:'Water & drink mixers',category:'Juices & Mixers',description:'Water-based refreshments and mixers for everyday use and events.',photo:photos.mixer}
+ {name:'Water & drink mixers',category:'Juices & Mixers',description:'Water-based refreshments and mixers for everyday use and events.',photo:photos.mixer},\n {name:'Energy drinks',category:'Energy Drinks',description:'Canned energy drinks and similar refreshments. Ask about current brands and pack sizes.',photo:photos.energy}
 ];
 function photoFor(category:string|null){const value=(category||'').toLowerCase();if(value.includes('alcohol')||value.includes('beer')||value.includes('wine')||value.includes('spirit'))return photos.beer;if(value.includes('juice')||value.includes('mixer'))return photos.juice;if(value.includes('water'))return photos.water;if(value.includes('soda')||value.includes('soft')||value.includes('energy'))return photos.soda;return photos.mixer}
 export default function StoreCatalog({products}:{products:Product[]}){const [cart,setCart]=useState<Record<string,number>>({});const [notice,setNotice]=useState('');
