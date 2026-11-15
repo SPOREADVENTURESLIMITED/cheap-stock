@@ -1,3 +1,4 @@
+import {enforceRateLimit} from '@/lib/cloudflare/rate-limit';
 import {initiatePesapalPayment} from '@/lib/cloudflare/pesapal';
 import {getDb} from '@/lib/cloudflare/db';
 export const dynamic='force-dynamic';
@@ -6,6 +7,7 @@ type Product={id:string,name:string,retail_price:number,wholesale_price:number,i
 export async function POST(request:Request){
  const origin=request.headers.get('origin');const host=request.headers.get('host');if(origin&&new URL(origin).host!==host)return Response.json({error:'Origin rejected'},{status:403});
  try{
+  if(await enforceRateLimit(request,'orders',12,3600))return Response.json({error:'Too many order requests from this connection. Try again later.'},{status:429});
   const body=await request.json() as {name?:string;phone?:string;email?:string;address?:string;notes?:string;customerType?:string;paymentMethod?:string;ageConfirmed?:boolean;items?:RequestItem[]};
   const name=String(body.name||'').trim(),phone=String(body.phone||'').replace(/[^+0-9]/g,'');
   if(name.length<2||phone.length<9||phone.length>16)return Response.json({error:'Enter your name and a valid Uganda phone number.'},{status:400});
