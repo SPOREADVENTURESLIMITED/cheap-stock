@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
-      - name: Prepare Cloudflare storage resources
+      - name: Bind existing Cloudflare D1 and KV resources
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
@@ -37,9 +37,6 @@ jobs:
           if (kv && kv.id) config.kv_namespaces[0].id = kv.id;
           fs.writeFileSync('wrangler.jsonc', JSON.stringify(config, null, 2));
           NODE
-          if ! npx wrangler r2 bucket list | grep -Fq "cheap-stock-product-images"; then
-            npx wrangler r2 bucket create cheap-stock-product-images
-          fi
       - name: Deploy Cloudflare Worker
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: npm run deploy
