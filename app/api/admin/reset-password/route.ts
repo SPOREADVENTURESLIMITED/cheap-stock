@@ -1,0 +1,7 @@
+import {getDb} from '@/lib/cloudflare/db';
+import {hashPassword} from '@/lib/cloudflare/auth';
+export const dynamic='force-dynamic';
+export async function POST(request:Request){
+ const origin=request.headers.get('origin');const host=request.headers.get('host');if(origin&&new URL(origin).host!==host)return Response.json({error:'Origin rejected'},{status:403});
+ try{const body=await request.json() as {recoveryKey?:string,email?:string,newPassword?:string};const env=(await import('@/lib/cloudflare/db')).getEnv;const cf=await env();if(!cf.ADMIN_RECOVERY_KEY||body.recoveryKey!==cf.ADMIN_RECOVERY_KEY)return Response.json({error:'Recovery authorization failed.'},{status:403});if(!body.email||!body.newPassword||body.newPassword.length<14)return Response.json({error:'Email and a new password of at least 14 characters are required.'},{status:400});const db=await getDb();const user=await db.prepare('SELECT id FROM admin_users WHERE email=? COLLATE NOCASE').bind(body.email).first<{id:string}>();if(!user)return Response.json({error:'Account not found.'},{status:404});const credentials=await hashPassword(body.newPassword);await db.prepare('UPDATE admin_users SET password_hash=?,password_salt=?,updated_at=datetime(\'now\') WHERE id=?').bind(credentials.hash,credentials.salt,user.id).run();await db.prepare('DELETE FROM admin_sessions WHERE user_id=?').bind(user.id).run();return Response.json({ok:true,message:'Password changed. All existing sessions were revoked.'})}catch{return Response.json({error:'Password reset could not be completed.'},{status:503})}
+}
