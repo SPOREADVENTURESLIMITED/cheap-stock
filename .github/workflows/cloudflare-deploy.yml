@@ -16,6 +16,9 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN: ${{ secrets.CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN }}
       CHEAP_STOCK_ADMIN_RECOVERY_KEY: ${{ secrets.CHEAP_STOCK_ADMIN_RECOVERY_KEY }}
+      PESAPAL_CONSUMER_KEY: ${{ secrets.PESAPAL_CONSUMER_KEY }}
+      PESAPAL_CONSUMER_SECRET: ${{ secrets.PESAPAL_CONSUMER_SECRET }}
+      PESAPAL_ENV: ${{ secrets.PESAPAL_ENV }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -34,6 +37,15 @@ jobs:
           fi
           if [ -n "$CHEAP_STOCK_ADMIN_RECOVERY_KEY" ]; then
             printf '%s' "$CHEAP_STOCK_ADMIN_RECOVERY_KEY" | npx wrangler secret put ADMIN_RECOVERY_KEY
+          fi
+          if [ -n "$PESAPAL_CONSUMER_KEY" ]; then
+            printf '%s' "$PESAPAL_CONSUMER_KEY" | npx wrangler secret put PESAPAL_CONSUMER_KEY
+          fi
+          if [ -n "$PESAPAL_CONSUMER_SECRET" ]; then
+            printf '%s' "$PESAPAL_CONSUMER_SECRET" | npx wrangler secret put PESAPAL_CONSUMER_SECRET
+          fi
+          if [ -n "$PESAPAL_ENV" ]; then
+            printf '%s' "$PESAPAL_ENV" | npx wrangler secret put PESAPAL_ENV
           fi
       - name: Apply Cloudflare D1 production migrations
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
