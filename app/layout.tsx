@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import DesignerCredit from '@/components/designer-credit';
 
 export const metadata: Metadata = {
   title: 'CHEAP STOCK | Quality Drinks. Wholesale Prices.',
@@ -11,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body>{children}<DesignerCredit /></body></html>;
 }
