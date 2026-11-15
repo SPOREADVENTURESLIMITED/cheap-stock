@@ -103,3 +103,13 @@
 .image-preview span{font-size:12px;color:var(--green);font-weight:700;line-height:1.5}
 .admin-product-thumb{width:58px;height:58px;object-fit:contain;background:#f7f8f1;border:1px solid var(--line);border-radius:9px;padding:3px}
 .admin-product-no-image{font-size:11px;color:var(--muted)}
+
+/* Beverage identity: custom drinks artwork and soft full-site background */
+body{background:#f7faf5}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(249,252,247,.91),rgba(249,252,247,.91)),url('/drinks-showcase.svg');background-size:cover;background-position:center;background-repeat:no-repeat;opacity:.22}
+main{position:relative;z-index:1}
+.hero{background:linear-gradient(90deg,rgba(247,250,241,.97) 0%,rgba(247,250,241,.9) 45%,rgba(247,250,241,.2) 100%),url('/drinks-showcase.svg') center/cover no-repeat;padding-top:64px;padding-bottom:64px}
+.hero-art{min-height:360px;border-radius:26px;background:#075c68;overflow:hidden;box-shadow:0 22px 55px rgba(8,54,55,.2);padding:0}
+.hero-showcase{display:block;width:100%;height:100%;min-height:360px;object-fit:cover}
+.designer-credit{backdrop-filter:blur(10px)}
+@media(max-width:760px){.hero{background:linear-gradient(rgba(247,250,241,.94),rgba(247,250,241,.94)),url('/drinks-showcase.svg') center/cover no-repeat;padding-top:42px}.hero-art,.hero-showcase{min-height:250px}}
