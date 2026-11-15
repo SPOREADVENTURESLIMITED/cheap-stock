@@ -12,7 +12,7 @@ Ugandan drinks retail and wholesale platform. Currency: UGX.
 Supabase has been removed from application dependencies and runtime access.
 
 ## Provisioning and deployment
-Wrangler declares D1, KV and R2 resources. Cloudflare supports automatic provisioning of these resources from Wrangler configuration during deployment. GitHub Actions deploys the Worker and applies D1 migrations.
+Wrangler declares Cloudflare D1 and KV bindings. The deployment workflow reuses the provisioned database and namespace. GitHub Actions deploys the Worker and applies D1 migrations.
 
 Required GitHub Actions secrets are only `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. The token needs Workers Scripts Edit, D1 Edit and Workers KV Storage Edit permissions. The deployment workflow reuses the existing D1 and KV resources, deploys the Worker and applies D1 migrations.
 
