@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">CHEAP STOCK drinks selection</title><desc id="desc">A colorful selection of bottled drinks, soda cans, juice cartons and water bottles with tropical fruit.</desc>
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#073d51"/><stop offset=".55" stop-color="#087d8a"/><stop offset="1" stop-color="#b8e8cb"/></linearGradient>
+ <linearGradient id="glass" x2="1" y2="0"><stop stop-color="#ffffff" stop-opacity=".7"/><stop offset=".25" stop-color="#ffffff" stop-opacity=".08"/><stop offset=".7" stop-color="#ffffff" stop-opacity=".2"/><stop offset="1" stop-color="#092f36" stop-opacity=".25"/></linearGradient>
+ <linearGradient id="gold" x2="1"><stop stop-color="#9d4a0a"/><stop offset=".45" stop-color="#f5bd43"/><stop offset="1" stop-color="#8d3b08"/></linearGradient>
+ <linearGradient id="orange" x2="0" y2="1"><stop stop-color="#ffbd35"/><stop offset="1" stop-color="#f16b16"/></linearGradient>
+ <linearGradient id="can" x2="1"><stop stop-color="#ffffff" stop-opacity=".28"/><stop offset=".18" stop-color="#ffffff" stop-opacity="0"/><stop offset=".8" stop-color="#ffffff" stop-opacity=".2"/><stop offset="1" stop-color="#061e29" stop-opacity=".25"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feGaussianBlur in="SourceAlpha" stdDeviation="15"/><feOffset dy="18"/><feComponentTransfer><feFuncA type="linear" slope=".28"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1600" height="900" rx="42" fill="url(#bg)"/>
+<circle cx="1330" cy="120" r="250" fill="#c8ffed" opacity=".12"/><circle cx="240" cy="160" r="190" fill="#b8ffdb" opacity=".1"/>
+<g fill="none" stroke="#c5f5df" stroke-width="12" opacity=".25"><path d="M0 250Q210 80 420 250T840 250"/><path d="M1050 0q-80 140 60 220t-10 220"/></g>
+<path d="M0 720Q300 650 600 735t600 0 400-10v175H0Z" fill="#073d45" opacity=".55"/>
+<g filter="url(#shadow)">
+<!-- beer bottles -->
+<g transform="translate(190 205)"><path d="M72 0h46v55l18 25v365q0 35-34 35H57q-34 0-34-35V80l18-25V0Z" fill="#14743f" stroke="#073c2a" stroke-width="8"/><path d="M72 0h46v55H72Z" fill="#d8bd64"/><path d="M26 190h104v118H26Z" fill="#e5c66d"/><path d="M34 210h88v78H34Z" fill="#f7e6ae"/><text x="78" y="258" font-family="Arial" font-weight="bold" font-size="24" text-anchor="middle" fill="#285033">BEER</text><path d="M28 90h98v265H28Z" fill="url(#glass)"/></g>
+<g transform="translate(390 270) scale(.88)"><path d="M72 0h46v55l18 25v365q0 35-34 35H57q-34 0-34-35V80l18-25V0Z" fill="#a65a18" stroke="#65350e" stroke-width="8"/><path d="M72 0h46v55H72Z" fill="#d8bd64"/><path d="M26 190h104v118H26Z" fill="#e9c45e"/><path d="M34 210h88v78H34Z" fill="#fff0bf"/><text x="78" y="258" font-family="Arial" font-weight="bold" font-size="24" text-anchor="middle" fill="#78431a">MALT</text><path d="M28 90h98v265H28Z" fill="url(#glass)"/></g>
+<!-- soda cans -->
+<g transform="translate(570 440)"><rect width="145" height="290" rx="27" fill="#e83437" stroke="#a91d27" stroke-width="8"/><ellipse cx="72" cy="13" rx="64" ry="10" fill="#d9e4e4"/><path d="M0 75h145v125H0Z" fill="#bd1e30"/><text x="72" y="151" font-family="Arial" font-size="28" font-weight="bold" text-anchor="middle" fill="#fff">SODA</text><path d="M5 20h135v250H5Z" fill="url(#can)"/></g>
+<g transform="translate(750 400)"><rect width="145" height="330" rx="27" fill="#1679d4" stroke="#0b4f98" stroke-width="8"/><ellipse cx="72" cy="13" rx="64" ry="10" fill="#d9e4e4"/><path d="M0 90h145v135H0Z" fill="#0e58a8"/><text x="72" y="165" font-family="Arial" font-size="26" font-weight="bold" text-anchor="middle" fill="#fff">COLA</text><path d="M5 20h135v290H5Z" fill="url(#can)"/></g>
+<g transform="translate(930 455)"><rect width="135" height="275" rx="25" fill="#e8a51b" stroke="#a36a08" stroke-width="8"/><ellipse cx="67" cy="12" rx="58" ry="9" fill="#e6eeee"/><path d="M0 76h135v112H0Z" fill="#e97810"/><text x="67" y="143" font-family="Arial" font-size="25" font-weight="bold" text-anchor="middle" fill="#fff">ORANGE</text><path d="M5 20h125v235H5Z" fill="url(#can)"/></g>
+<!-- juice cartons -->
+<g transform="translate(1110 390)"><path d="M20 45 48 0h118l30 45v285H20Z" fill="#f6c43d" stroke="#d28b18" stroke-width="8"/><path d="M48 0h118l30 45H20Z" fill="#ffe18a"/><rect x="85" y="-15" width="42" height="25" rx="7" fill="#fff2cf"/><circle cx="108" cy="170" r="48" fill="#f28a19"/><circle cx="108" cy="170" r="33" fill="#ffcb44"/><text x="108" y="255" font-family="Arial" font-weight="bold" font-size="24" text-anchor="middle" fill="#75410e">JUICE</text></g>
+<g transform="translate(1320 435) scale(.85)"><path d="M20 45 48 0h118l30 45v285H20Z" fill="#e84a65" stroke="#a92b49" stroke-width="8"/><path d="M48 0h118l30 45H20Z" fill="#ff9aa7"/><rect x="85" y="-15" width="42" height="25" rx="7" fill="#fff2cf"/><path d="M65 155q45-70 90 0-45 70-90 0Z" fill="#fff"/><text x="108" y="255" font-family="Arial" font-weight="bold" font-size="24" text-anchor="middle" fill="#fff">FRUIT</text></g>
+<!-- water bottles -->
+<g transform="translate(75 480) scale(.62)"><path d="M70 0h60v55l22 25v370q0 40-40 40H48q-40 0-40-40V80l22-25V0Z" fill="#d5f8ff" fill-opacity=".8" stroke="#80d6ed" stroke-width="8"/><path d="M70 0h60v55H70Z" fill="#168dd0"/><path d="M10 195h140v100H10Z" fill="#138bd0"/><text x="80" y="255" font-family="Arial" font-size="25" font-weight="bold" text-anchor="middle" fill="#fff">WATER</text><path d="M15 85h130v285H15Z" fill="url(#glass)"/></g>
+</g>
+<!-- fruit accents -->
+<g filter="url(#shadow)"><circle cx="420" cy="770" r="75" fill="url(#orange)"/><path d="M420 693q-10-35 22-45" stroke="#387c35" stroke-width="12" fill="none"/><circle cx="480" cy="795" r="42" fill="#ffda66"/><circle cx="480" cy="795" r="25" fill="#f28a18"/><path d="M1210 760q-75-95-125 0 60 95 125 0Z" fill="#f0b72d"/><path d="M1198 708q15-35 40-35" stroke="#4a8d38" stroke-width="12" fill="none"/><circle cx="1460" cy="785" r="55" fill="#d83242"/><path d="M1450 730q-10-30 20-36" stroke="#448e3c" stroke-width="10" fill="none"/></g>
+<g fill="#e7fff5" opacity=".75"><circle cx="170" cy="115" r="8"/><circle cx="520" cy="145" r="6"/><circle cx="1030" cy="210" r="9"/><circle cx="1430" cy="330" r="7"/><circle cx="300" cy="540" r="5"/></g>
+</svg>
