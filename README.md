@@ -20,6 +20,8 @@ Required GitHub Actions secrets:
 - `CLOUDFLARE_ACCOUNT_ID` — Cloudflare account ID.
 - `CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN` — long random one-time token for creating the first admin.
 - `CHEAP_STOCK_ADMIN_RECOVERY_KEY` — long random owner recovery key for resetting the admin password.
+- `PESAPAL_CONSUMER_KEY` and `PESAPAL_CONSUMER_SECRET` — merchant API credentials from Pesapal.
+- `PESAPAL_ENV` — set to `sandbox` for testing or `live` for production.
 
 The workflow transfers bootstrap and recovery values to Worker secrets. Never commit secrets or paste them into chat. After first admin setup, remove or rotate the bootstrap token in Cloudflare.
 
@@ -39,7 +41,7 @@ The workflow transfers bootstrap and recovery values to Worker secrets. Never co
 Run `npm install`, then `npm run dev`. Wrangler bindings are declared in `wrangler.jsonc`. Use a local `.dev.vars` file for secrets; never commit it.
 
 ## Payment status
-The application can store payment records and reconciliation results in D1, but no payment gateway is active until a supported Uganda payment provider and its production credentials/webhook are configured. Never mark an order paid based only on a browser redirect or customer screenshot.
+Checkout includes a Pesapal API 3.0 adapter: it requests a hosted checkout URL, registers a Cloudflare IPN endpoint, verifies transaction status server-to-server, checks amount/currency/merchant reference and records the confirmation in D1. Pesapal documents hosted checkout, IPN and status lookup as separate required steps. This integration remains inactive until valid merchant credentials are supplied as Worker secrets and tested in Pesapal sandbox. Never mark an order paid based only on a browser redirect or customer screenshot.
 
 ## Compliance
 Alcohol products require age verification, applicable Ugandan licensing and responsible-sales controls. Product stock, prices and delivery availability must be confirmed before accepting payment.
