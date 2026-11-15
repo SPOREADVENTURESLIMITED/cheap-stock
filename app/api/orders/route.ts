@@ -1,3 +1,4 @@
+import {initiatePesapalPayment} from '@/lib/cloudflare/pesapal';
 import {getDb} from '@/lib/cloudflare/db';
 export const dynamic='force-dynamic';
 type RequestItem={productId:string;quantity:number};
@@ -17,7 +18,7 @@ export async function POST(request:Request){
   if(ageRestricted&&!body.ageConfirmed)return Response.json({error:'Confirm that you are at least 18 before requesting age-restricted products.'},{status:400});
   const lineItems=results.map(p=>{const qty=quantities.get(p.id)||0;const price=customerType==='wholesale'&&p.wholesale_price>0?p.wholesale_price:p.retail_price;return {product:p,quantity:qty,price,total:Math.round(price*qty)}});
   const subtotal=lineItems.reduce((sum,item)=>sum+item.total,0);if(!Number.isSafeInteger(subtotal)||subtotal<=0)return Response.json({error:'The order total is invalid.'},{status:400});
-  const method=['cash','mobile_money','bank'].includes(body.paymentMethod||'')?body.paymentMethod!:'mobile_money';
+  const method=['cash','mobile_money','bank','pesapal'].includes(body.paymentMethod||'')?body.paymentMethod!:'mobile_money';
   const orderId=crypto.randomUUID(),customerId=crypto.randomUUID(),paymentId=crypto.randomUUID();
   const orderNumber='CS-'+new Date().toISOString().slice(0,10).replaceAll('-','')+'-'+crypto.randomUUID().slice(0,6).toUpperCase();
   const stmts=[
@@ -27,6 +28,8 @@ export async function POST(request:Request){
    db.prepare("INSERT INTO payments(id,order_id,provider,method,amount,status) VALUES(?,?,'manual',?,?,'pending')").bind(paymentId,orderId,method,subtotal),
   ];
   await db.batch(stmts);
-  return Response.json({ok:true,orderNumber,total:subtotal,currency:'UGX',paymentStatus:'unpaid',message:'Order request received. Our team must confirm stock, delivery and payment instructions. No payment has been collected.'},{status:201});
+  let paymentUrl:string|null=null;let paymentMessage='Order request received. Our team must confirm stock, delivery and payment instructions. No payment has been collected.';
+  if(method==='pesapal'){try{paymentUrl=await initiatePesapalPayment({orderId,orderNumber,amount:subtotal,name,phone,email:body.email||null,address:body.address||null,origin:new URL(request.url).origin});paymentMessage='Order created. Continue to Pesapal to choose a payment method. The order is marked paid only after server-side verification.'}catch{paymentMessage='Order saved, but online payment setup is not ready. Contact customer care; do not send money to an unverified number.'}}
+  return Response.json({ok:true,orderNumber,total:subtotal,currency:'UGX',paymentStatus:'unpaid',paymentUrl,message:paymentMessage},{status:201});
  }catch{return Response.json({error:'Order could not be submitted. Please try again shortly.'},{status:503})}
 }
