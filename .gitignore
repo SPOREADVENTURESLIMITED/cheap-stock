@@ -5,3 +5,8 @@ out
 .env.*
 !.env.example
 .DS_Store
+
+# Cloudflare Workers build output
+.open-next/
+.wrangler/
+cloudflare-env.d.ts
