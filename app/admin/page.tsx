@@ -1,0 +1,3 @@
+export default function AdminPage() {
+  return <main className="admin-shell"><div className="admin-card"><a className="logo" href="/">CHEAP<span>STOCK.</span></a><h1>Administration portal</h1><p>This is the initial admin portal placeholder. Secure administrator authentication, role permissions, inventory, orders, finance, tax, audit logs and reporting must be implemented and tested before this area is used for live business operations.</p><div className="notice"><strong>Setup status:</strong> Admin access is not yet enabled. Do not enter passwords or sensitive business information on this page.</div><a className="admin-link" href="/">← Return to public website</a></div></main>;
+}
