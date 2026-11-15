@@ -85,3 +85,13 @@
 .product-placeholder{font-size:70px}
 @media(max-width:760px){.metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.metric-card{padding:12px}.metric-card strong{font-size:22px}}
 @media(max-width:480px){.metric-grid{grid-template-columns:1fr}.stock-form{grid-template-columns:1fr;min-width:0}.ticket-update{flex-direction:column;align-items:stretch}}
+
+
+/* Floating studio attribution */
+.designer-credit{position:fixed;left:18px;bottom:72px;z-index:60;display:flex;align-items:center;gap:9px;padding:9px 13px 9px 10px;background:#14271b;color:#fff;border:1px solid #ffffff22;border-radius:14px;box-shadow:0 8px 24px #102a1933;transition:transform .2s,box-shadow .2s;max-width:calc(100vw - 36px)}
+.designer-credit:hover{transform:translateY(-2px);box-shadow:0 12px 28px #102a1944}
+.designer-credit-mark{width:27px;height:27px;display:grid;place-items:center;border-radius:9px;background:var(--lime);color:#17351f;font-size:16px;flex:none}
+.designer-credit small,.designer-credit strong{display:block;line-height:1.25}
+.designer-credit small{font-size:9px;color:#c4d0c7;letter-spacing:.03em}
+.designer-credit strong{font-size:10px;letter-spacing:.09em}
+@media(max-width:480px){.designer-credit{left:12px;bottom:67px;padding:8px 10px}.designer-credit-mark{width:24px;height:24px}.designer-credit small{font-size:8px}.designer-credit strong{font-size:9px}}
