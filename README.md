@@ -16,5 +16,9 @@ Next.js 15, React 19, TypeScript, Supabase Auth and PostgreSQL with Row Level Se
 
 Never expose a service-role key in browser code or commit secrets. The database migration enables RLS; review policies before production. Alcohol sales require applicable Ugandan licensing, age verification and responsible-sales procedures.
 
+## Cloudflare deployment
+
+The repository includes an OpenNext/Cloudflare Workers deployment workflow. Add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub Actions repository secrets to enable deployment on pushes to `main`.
+
 ## Status
 Storefront, admin authentication foundation, protected module navigation and initial schema are committed. CRUD workflows, checkout, payment gateway, automated tax rules, PDF/QR documents, delivery integrations, backup procedures and production deployment still need implementation and testing. No payment provider is active.
