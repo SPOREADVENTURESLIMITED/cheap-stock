@@ -14,16 +14,30 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN: ${{ secrets.CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN }}
+      CHEAP_STOCK_ADMIN_RECOVERY_KEY: ${{ secrets.CHEAP_STOCK_ADMIN_RECOVERY_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install
-      - name: Deploy to Cloudflare Workers
+      - name: Deploy Cloudflare Worker and provision bindings
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: npm run deploy
+      - name: Configure administrator recovery secrets
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        shell: bash
+        run: |
+          if [ -n "$CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN" ]; then
+            printf '%s' "$CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN" | npx wrangler secret put ADMIN_BOOTSTRAP_TOKEN
+          fi
+          if [ -n "$CHEAP_STOCK_ADMIN_RECOVERY_KEY" ]; then
+            printf '%s' "$CHEAP_STOCK_ADMIN_RECOVERY_KEY" | npx wrangler secret put ADMIN_RECOVERY_KEY
+          fi
+      - name: Apply Cloudflare D1 production migrations
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: npm run db:migrate:remote
       - name: Explain missing Cloudflare credentials
         if: ${{ env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' }}
-        run: |
-          echo "::notice::Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID as GitHub Actions secrets to enable automatic deployment."
+        run: echo "::notice::Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets."
