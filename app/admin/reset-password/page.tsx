@@ -1,0 +1,8 @@
+'use client';
+import {FormEvent,useState} from 'react';
+import {createBrowserClient} from '@supabase/ssr';
+export default function ResetAdminPassword(){
+ const [email,setEmail]=useState('');const [message,setMessage]=useState('');const [error,setError]=useState('');const [busy,setBusy]=useState(false);
+ async function submit(e:FormEvent){e.preventDefault();setBusy(true);setError('');setMessage('');const url=process.env.NEXT_PUBLIC_SUPABASE_URL;const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;if(!url||!key){setError('Password reset is unavailable until Supabase is connected.');setBusy(false);return;}const supabase=createBrowserClient(url,key);const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/admin/update-password'});if(error)setError(error.message);else setMessage('If this email belongs to an account, Supabase will send a password reset link. Check your inbox and spam folder.');setBusy(false)}
+ return <main className="admin-shell"><form className="admin-card" onSubmit={submit}><a className="logo" href="/">CHEAP<span>STOCK.</span></a><h1>Reset administrator password</h1><p>Enter the email address associated with your administrator account. We will request a secure reset link from Supabase.</p><label className="field-label">Administrator email<input className="field" type="email" required value={email} onChange={e=>setEmail(e.target.value)}/></label>{error&&<div className="error">{error}</div>}{message&&<div className="success">{message}</div>}<button className="btn primary full" disabled={busy}>{busy?'Sending…':'Send reset link'}</button><a className="admin-link" href="/admin/login">← Back to sign in</a></form></main>;
+}
