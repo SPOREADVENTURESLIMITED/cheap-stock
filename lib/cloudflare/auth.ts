@@ -6,10 +6,11 @@ const encoder=new TextEncoder();
 function hex(bytes:Uint8Array){return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('')}
 function unhex(value:string){return new Uint8Array(value.match(/.{1,2}/g)?.map(x=>parseInt(x,16))||[])}
 async function digest(value:string){return hex(new Uint8Array(await crypto.subtle.digest('SHA-256',encoder.encode(value))))}
+const PBKDF2_ITERATIONS=100000;
 export async function hashPassword(password:string,salt?:string){
  const saltBytes=salt?unhex(salt):crypto.getRandomValues(new Uint8Array(16));
  const material=await crypto.subtle.importKey('raw',encoder.encode(password),'PBKDF2',false,['deriveBits']);
- const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:saltBytes,iterations:310000,hash:'SHA-256'},material,256);
+ const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:saltBytes,iterations:PBKDF2_ITERATIONS,hash:'SHA-256'},material,256);
  return {hash:hex(new Uint8Array(bits)),salt:hex(saltBytes)};
 }
 export async function verifyPassword(password:string,hash:string,salt:string){const result=await hashPassword(password,salt);return result.hash===hash}
