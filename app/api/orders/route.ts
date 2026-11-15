@@ -29,7 +29,8 @@ export async function POST(request:Request){
   ];
   await db.batch(stmts);
   let paymentUrl:string|null=null;let paymentMessage='Order request received. Our team must confirm stock, delivery and payment instructions. No payment has been collected.';
-  if(method==='pesapal'){try{paymentUrl=await initiatePesapalPayment({orderId,orderNumber,amount:subtotal,name,phone,email:body.email||null,address:body.address||null,origin:new URL(request.url).origin});paymentMessage='Order created. Continue to Pesapal to choose a payment method. The order is marked paid only after server-side verification.'}catch{paymentMessage='Order saved, but online payment setup is not ready. Contact customer care; do not send money to an unverified number.'}}
+  if(method==='pesapal'&&ageRestricted){paymentMessage='Order request saved. Because your basket contains age-restricted products, staff must verify your identity and legal age before any payment request.'}
+  else if(method==='pesapal'){try{paymentUrl=await initiatePesapalPayment({orderId,orderNumber,amount:subtotal,name,phone,email:body.email||null,address:body.address||null,origin:new URL(request.url).origin});paymentMessage='Order created. Continue to Pesapal to choose a payment method. The order is marked paid only after server-side verification.'}catch{paymentMessage='Order saved, but online payment setup is not ready. Contact customer care; do not send money to an unverified number.'}}
   return Response.json({ok:true,orderNumber,total:subtotal,currency:'UGX',paymentStatus:'unpaid',paymentUrl,message:paymentMessage},{status:201});
  }catch{return Response.json({error:'Order could not be submitted. Please try again shortly.'},{status:503})}
 }
