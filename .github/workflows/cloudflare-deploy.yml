@@ -14,39 +14,35 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN: ${{ secrets.CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN }}
-      CHEAP_STOCK_ADMIN_RECOVERY_KEY: ${{ secrets.CHEAP_STOCK_ADMIN_RECOVERY_KEY }}
-      PESAPAL_CONSUMER_KEY: ${{ secrets.PESAPAL_CONSUMER_KEY }}
-      PESAPAL_CONSUMER_SECRET: ${{ secrets.PESAPAL_CONSUMER_SECRET }}
-      PESAPAL_ENV: ${{ secrets.PESAPAL_ENV }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
-      - name: Deploy Cloudflare Worker and provision bindings
-        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
-        run: npm run deploy
-      - name: Configure administrator recovery secrets
+      - name: Prepare Cloudflare storage resources
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
-          if [ -n "$CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN" ]; then
-            printf '%s' "$CHEAP_STOCK_ADMIN_BOOTSTRAP_TOKEN" | npx wrangler secret put ADMIN_BOOTSTRAP_TOKEN
+          node <<'NODE'
+          const fs = require('node:fs');
+          const { execFileSync } = require('node:child_process');
+          const config = JSON.parse(fs.readFileSync('wrangler.jsonc', 'utf8'));
+          const databases = JSON.parse(execFileSync('npx', ['wrangler','d1','list','--json'], { encoding: 'utf8' }));
+          const namespaces = JSON.parse(execFileSync('npx', ['wrangler','kv','namespace','list'], { encoding: 'utf8' }));
+          const db = databases.find(x => (x.name || x.database_name) === 'cheap-stock-db');
+          const kv = namespaces.find(x => x.title === 'cheap-stock-cache');
+          const dbId = db && (db.uuid || db.database_id || db.id);
+          if (dbId) config.d1_databases[0].database_id = dbId;
+          if (kv && kv.id) config.kv_namespaces[0].id = kv.id;
+          fs.writeFileSync('wrangler.jsonc', JSON.stringify(config, null, 2));
+          NODE
+          if ! npx wrangler r2 bucket list | grep -Fq "cheap-stock-product-images"; then
+            npx wrangler r2 bucket create cheap-stock-product-images
           fi
-          if [ -n "$CHEAP_STOCK_ADMIN_RECOVERY_KEY" ]; then
-            printf '%s' "$CHEAP_STOCK_ADMIN_RECOVERY_KEY" | npx wrangler secret put ADMIN_RECOVERY_KEY
-          fi
-          if [ -n "$PESAPAL_CONSUMER_KEY" ]; then
-            printf '%s' "$PESAPAL_CONSUMER_KEY" | npx wrangler secret put PESAPAL_CONSUMER_KEY
-          fi
-          if [ -n "$PESAPAL_CONSUMER_SECRET" ]; then
-            printf '%s' "$PESAPAL_CONSUMER_SECRET" | npx wrangler secret put PESAPAL_CONSUMER_SECRET
-          fi
-          if [ -n "$PESAPAL_ENV" ]; then
-            printf '%s' "$PESAPAL_ENV" | npx wrangler secret put PESAPAL_ENV
-          fi
+      - name: Deploy Cloudflare Worker
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: npm run deploy
       - name: Apply Cloudflare D1 production migrations
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: npm run db:migrate:remote
