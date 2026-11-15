@@ -1,5 +1,5 @@
 'use client';
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 type Item={productId:string;name:string;quantity:number;price:number};
 export default function Checkout(){const [items,setItems]=useState<Item[]>([]);const [name,setName]=useState('');const [phone,setPhone]=useState('');const [email,setEmail]=useState('');const [address,setAddress]=useState('');const [notes,setNotes]=useState('');const [customerType,setCustomerType]=useState('retail');const [paymentMethod,setPaymentMethod]=useState('pesapal');const [ageConfirmed,setAgeConfirmed]=useState(false);const [error,setError]=useState('');const [result,setResult]=useState('');const [busy,setBusy]=useState(false);
  function loadCart(){try{const raw=localStorage.getItem('cheap-stock-cart');if(raw)setItems(JSON.parse(raw) as Item[])}catch{setItems([])}}
