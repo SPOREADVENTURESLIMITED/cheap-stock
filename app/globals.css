@@ -8,3 +8,53 @@
 @media(max-width:480px){.module-grid{grid-template-columns:1fr}.sidebar{grid-template-columns:1fr 1fr}.admin-shell{padding:12px}.admin-card{padding:24px}}
 
 .product-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.product-form label{font-size:13px;font-weight:700}.product-form .field{margin-top:6px}.check-field{grid-column:1/-1;display:flex;align-items:center;gap:9px}.product-form button{justify-self:start}.success{background:#e6f5df;color:#245a2c;padding:12px;border-radius:9px}.table-scroll{overflow-x:auto}.data-table{width:100%;border-collapse:collapse;font-size:13px;min-width:620px}.data-table th,.data-table td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line)}.data-table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}@media(max-width:600px){.product-form{grid-template-columns:1fr}.check-field{grid-column:auto}}
+
+
+/* Store catalogue, customer care and installable web app */
+.hero-note{font-size:12px!important;margin-top:16px}
+.catalog-note{font-size:12px;font-weight:800;color:var(--green);background:#eef6e5;padding:10px 14px;border-radius:24px}
+.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.product-card{overflow:hidden;border:1px solid var(--line);border-radius:20px;background:#fff;transition:transform .2s,box-shadow .2s}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 16px 35px #1b382011}
+.product-image{height:205px;background:#f7f8f1;position:relative;display:flex;align-items:center;justify-content:center;padding:12px}
+.product-image img{width:100%;height:100%;object-fit:contain}
+.type-tag,.age-tag{position:absolute;top:12px;left:12px;border-radius:30px;padding:7px 10px;font-size:10px;font-weight:800;background:#e5f4df;color:#275d2e}
+.age-tag{background:#fff0df;color:#8b4b12}
+.product-info{padding:18px}
+.product-category{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--green)}
+.product-info h3{font:800 19px Manrope,sans-serif;margin:7px 0}
+.product-info p{font-size:13px;line-height:1.55;color:var(--muted);min-height:40px}
+.product-action{display:flex;justify-content:space-between;align-items:center;color:var(--green);font-size:12px;font-weight:800;margin-top:16px}
+.catalog-disclaimer{font-size:11px;color:var(--muted);line-height:1.6;margin-top:18px}
+.wholesale-panel{background:#edf5e5;border:1px solid #d9e9c9;border-radius:22px;padding:30px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.wholesale-panel h2{font:800 29px Manrope,sans-serif;margin:8px 0}
+.wholesale-panel p{color:var(--muted);font-size:14px;line-height:1.65;max-width:650px}
+.help-section h2{font:800 30px Manrope,sans-serif;margin:8px 0}
+.faq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:24px}
+.faq-grid>div{background:#f7f8f1;border:1px solid var(--line);border-radius:15px;padding:19px}
+.faq-grid strong{font-size:14px}
+.faq-grid p{font-size:13px;line-height:1.6;color:var(--muted);margin-bottom:0}
+.floating-shop,.floating-support,.install-app>button{border:0;box-shadow:0 8px 25px #102a1933;font-weight:800}
+.floating-shop{position:fixed;right:20px;bottom:92px;z-index:40;background:var(--lime);color:#17351f;border-radius:30px;padding:14px 20px;font-size:13px}
+.support-widget{position:fixed;right:20px;bottom:20px;z-index:50}
+.floating-support{background:var(--green);color:#fff;border-radius:30px;padding:14px 19px;font-size:13px}
+.floating-support span{margin-right:7px}
+.support-panel{position:absolute;right:0;bottom:62px;width:min(370px,calc(100vw - 32px));max-height:min(650px,calc(100vh - 120px));overflow:auto;background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:0 18px 55px #102a1930}
+.support-panel>header{background:#14271b;color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
+.support-panel>header strong,.support-panel>header small{display:block}
+.support-panel>header small{font-size:11px;color:#c4d0c7;margin-top:4px}
+.support-panel>header button{border:0;background:transparent;color:#fff;font-size:26px}
+.support-body{padding:15px}
+.bot-message{background:#edf5e5;border-radius:12px;padding:12px;font-size:12px;line-height:1.55}
+.faq-answer{border-bottom:1px solid var(--line)}
+.faq-answer>button{border:0;background:transparent;width:100%;display:flex;justify-content:space-between;text-align:left;padding:12px 2px;font-size:12px;font-weight:800;color:var(--ink)}
+.faq-answer p{font-size:12px;line-height:1.55;color:var(--muted);padding:0 3px 10px;margin:0}
+.support-label{display:block;font-size:12px;font-weight:800;margin:14px 0 6px}
+.support-body textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:12px;resize:vertical}
+.support-send{display:block;text-align:center;background:var(--green);color:white;padding:11px;border-radius:10px;margin-top:10px;font-size:12px;font-weight:800}
+.support-footnote{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:9px}
+.install-app{position:fixed;left:18px;bottom:20px;z-index:45}
+.install-app>button{background:#fff;color:var(--green);border:1px solid #d9e6d3;border-radius:30px;padding:12px 16px;font-size:12px}
+.install-help{position:absolute;bottom:52px;left:0;width:260px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 10px 30px #102a1920;font-size:12px;line-height:1.6}
+@media(max-width:760px){.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wholesale-panel{align-items:flex-start;flex-direction:column}.faq-grid{grid-template-columns:1fr}.product-image{height:165px}.floating-shop{right:15px;bottom:88px}.support-widget{right:14px;bottom:15px}.install-app{left:12px;bottom:15px}}
+@media(max-width:420px){.product-grid{grid-template-columns:1fr}.product-image{height:190px}.install-app>button{font-size:11px;padding:11px 12px}.floating-support{padding:12px 15px}}
