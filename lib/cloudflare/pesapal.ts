@@ -1,0 +1,28 @@
+import {getDb,getEnv} from './db';
+type PesapalAuth={token?:string;status?:string;message?:string};
+type PesapalOrder={order_tracking_id?:string;merchant_reference?:string;redirect_url?:string;status?:string;message?:string;error?:unknown};
+type PesapalStatus={merchant_reference?:string;amount?:number;currency?:string;status_code?:number;payment_status_description?:string;payment_method?:string;confirmation_code?:string;description?:string};
+async function baseUrl(){const env=await getEnv();return env.PESAPAL_ENV==='live'?'https://pay.pesapal.com/v3':'https://cybqa.pesapal.com/pesapalv3'}
+async function token(){const env=await getEnv();if(!env.PESAPAL_CONSUMER_KEY||!env.PESAPAL_CONSUMER_SECRET)throw new Error('Pesapal merchant credentials are not configured in Cloudflare Worker secrets.');const base=await baseUrl();const response=await fetch(base+'/api/Auth/RequestToken',{method:'POST',headers:{Accept:'application/json','Content-Type':'application/json'},body:JSON.stringify({consumer_key:env.PESAPAL_CONSUMER_KEY,consumer_secret:env.PESAPAL_CONSUMER_SECRET})});if(!response.ok)throw new Error('Pesapal authentication failed.');const data=await response.json() as PesapalAuth;if(!data.token)throw new Error(data.message||'Pesapal did not return an access token.');return {base,token:data.token}}
+async function notificationId(auth:{base:string;token:string},origin:string){const db=await getDb();const stored=await db.prepare("SELECT value FROM settings WHERE key='pesapal_ipn_id'").first<{value:string}>();if(stored?.value)return stored.value;const response=await fetch(auth.base+'/api/URLSetup/RegisterIPN',{method:'POST',headers:{Authorization:'Bearer '+auth.token,Accept:'application/json','Content-Type':'application/json'},body:JSON.stringify({url:origin+'/api/payments/ipn',ipn_notification_type:'GET'})});if(!response.ok)throw new Error('Pesapal IPN registration failed.');const data=await response.json() as {ipn_id?:string;error?:{message?:string}};if(!data.ipn_id)throw new Error(data.error?.message||'Pesapal did not return an IPN identifier.');await db.prepare("INSERT INTO settings(key,value) VALUES('pesapal_ipn_id',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=datetime('now')").bind(data.ipn_id).run();return data.ipn_id}
+export async function initiatePesapalPayment(args:{orderId:string;orderNumber:string;amount:number;name:string;phone:string;email?:string|null;address?:string|null;origin:string}){
+ const auth=await token();const ipn=await notificationId(auth,args.origin);const parts=args.name.trim().split(/\s+/);const first=parts.shift()||'Customer';const last=parts.join(' ')||'';
+ const response=await fetch(auth.base+'/api/Transactions/SubmitOrderRequest',{method:'POST',headers:{Authorization:'Bearer '+auth.token,Accept:'application/json','Content-Type':'application/json'},body:JSON.stringify({id:args.orderNumber,currency:'UGX',amount:args.amount,description:'CHEAP STOCK order '+args.orderNumber,callback_url:args.origin+'/payment/callback',cancellation_url:args.origin+'/payment/cancel',notification_id:ipn,redirect_mode:'TOP_WINDOW',billing_address:{phone_number:args.phone,email_address:args.email||undefined,country_code:'UG',first_name:first,last_name:last,line_1:args.address||''}})});
+ if(!response.ok)throw new Error('Pesapal payment request failed.');const data=await response.json() as PesapalOrder;if(!data.redirect_url||!data.order_tracking_id)throw new Error(data.message||'Pesapal did not return a checkout URL.');
+ const db=await getDb();await db.prepare("UPDATE payments SET provider='pesapal',provider_reference=?,provider_tracking_id=?,checkout_url=? WHERE order_id=? AND status='pending'").bind(args.orderNumber,data.order_tracking_id,data.redirect_url,args.orderId).run();
+ return data.redirect_url;
+}
+export async function reconcilePesapalPayment(trackingId:string,merchantReference:string){
+ const auth=await token();const response=await fetch(auth.base+'/api/Transactions/GetTransactionStatus?orderTrackingId='+encodeURIComponent(trackingId),{headers:{Authorization:'Bearer '+auth.token,Accept:'application/json','Content-Type':'application/json'}});
+ if(!response.ok)throw new Error('Could not verify payment with Pesapal.');const data=await response.json() as PesapalStatus;
+ const db=await getDb();const payment=await db.prepare('SELECT p.id,p.order_id,p.amount,o.total,o.order_number FROM payments p JOIN orders o ON o.id=p.order_id WHERE p.provider_reference=? AND p.provider_tracking_id=?').bind(merchantReference,trackingId).first<{id:string,order_id:string,amount:number,total:number,order_number:string}>();
+ if(!payment||payment.order_number!==merchantReference)return {status:'unmatched'};
+ const amount=Math.round(Number(data.amount)*100)/100;const currency=(data.currency||'').toUpperCase();const code=Number(data.status_code);
+ if(currency!=='UGX'||amount!==payment.amount||amount!==payment.total||data.merchant_reference!==merchantReference)return {status:'mismatch'};
+ let status:'successful'|'failed'|'refunded'|'pending'='pending';if(code===1)status='successful';else if(code===2||code===0)status='failed';else if(code===3)status='refunded';
+ await db.batch([
+  db.prepare('UPDATE payments SET status=?,confirmation_code=?,raw_status=?,paid_at=CASE WHEN ?=\'successful\' THEN datetime(\'now\') ELSE paid_at END WHERE id=?').bind(status,data.confirmation_code||null,data.payment_status_description||data.description||null,status,payment.id),
+  db.prepare('UPDATE orders SET payment_status=?,updated_at=datetime(\'now\') WHERE id=?').bind(status==='successful'?'paid':status==='refunded'?'refunded':status==='failed'?'failed':'pending',payment.order_id)
+ ]);
+ return {status,orderNumber:payment.order_number};
+}
