@@ -6,8 +6,7 @@ Ugandan drinks retail and wholesale platform. Currency: UGX.
 ## Cloudflare-only platform
 - **Cloudflare Workers** — Next.js application runtime and API routes via OpenNext.
 - **Cloudflare D1** — products, customers, orders, payments, stock, audit and admin sessions.
-- **Cloudflare R2** — product images and generated business documents.
-- **Cloudflare KV** — cache and short-lived operational data.
+- **Cloudflare KV** — rate limiting, cache and binary product-image storage (up to 5 MB per uploaded image).
 - **Cloudflare security** — HTTPS, Worker secrets, secure HTTP-only admin session cookies and optional Turnstile integration.
 
 Supabase has been removed from application dependencies and runtime access.
@@ -15,7 +14,7 @@ Supabase has been removed from application dependencies and runtime access.
 ## Provisioning and deployment
 Wrangler declares D1, KV and R2 resources. Cloudflare supports automatic provisioning of these resources from Wrangler configuration during deployment. GitHub Actions deploys the Worker and applies D1 migrations.
 
-Required GitHub Actions secrets are only `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. The token needs Workers Scripts Edit, D1 Edit, Workers KV Storage Edit and R2 Storage Edit permissions. The deployment workflow provisions/reuses D1 and KV, creates the R2 bucket if missing, deploys the Worker and applies D1 migrations.
+Required GitHub Actions secrets are only `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. The token needs Workers Scripts Edit, D1 Edit and Workers KV Storage Edit permissions. The deployment workflow reuses the existing D1 and KV resources, deploys the Worker and applies D1 migrations.
 
 Set application secrets directly in Cloudflare Dashboard → Workers & Pages → `cheap-stock` → Settings → Variables and Secrets → Add secret:
 - `ADMIN_BOOTSTRAP_TOKEN` — long random one-time token for first administrator setup.
