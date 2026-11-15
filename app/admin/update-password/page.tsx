@@ -1,9 +1,2 @@
-'use client';
-import {FormEvent,useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {createBrowserClient} from '@supabase/ssr';
-export default function UpdateAdminPassword(){
- const router=useRouter();const [password,setPassword]=useState('');const [confirm,setConfirm]=useState('');const [error,setError]=useState('');const [done,setDone]=useState(false);const [busy,setBusy]=useState(false);
- async function submit(e:FormEvent){e.preventDefault();setError('');if(password.length<10){setError('Use at least 10 characters.');return}if(password!==confirm){setError('The passwords do not match.');return}const url=process.env.NEXT_PUBLIC_SUPABASE_URL;const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;if(!url||!key){setError('Supabase is not configured.');return}setBusy(true);const supabase=createBrowserClient(url,key);const {error}=await supabase.auth.updateUser({password});if(error)setError(error.message);else{setDone(true);setTimeout(()=>router.replace('/admin/login'),1800)}setBusy(false)}
- return <main className="admin-shell"><form className="admin-card" onSubmit={submit}><a className="logo" href="/">CHEAP<span>STOCK.</span></a><h1>Choose a new password</h1><p>Use a unique password of at least 10 characters.</p><label className="field-label">New password<input className="field" type="password" autoComplete="new-password" minLength={10} required value={password} onChange={e=>setPassword(e.target.value)}/></label><label className="field-label">Confirm new password<input className="field" type="password" autoComplete="new-password" minLength={10} required value={confirm} onChange={e=>setConfirm(e.target.value)}/></label>{error&&<div className="error">{error}</div>}{done&&<div className="success">Password updated. Returning to administrator sign in…</div>}<button className="btn primary full" disabled={busy||done}>{busy?'Updating…':'Update password'}</button></form></main>;
-}
+import {redirect} from 'next/navigation';
+export default function UpdatePassword(){redirect('/admin/reset-password')}
